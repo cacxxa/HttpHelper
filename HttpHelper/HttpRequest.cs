@@ -83,11 +83,15 @@ namespace HttpHelper
 
         public async Task<string> SendAsync()
         {
+            if (!Validate()) throw new Exception("Не все обязательные параметры были добавлены (Method, Url)");
+
             using (HttpResponseMessage responseMessage = await ResponseMessage().ConfigureAwait(false))
             {
                 return await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
         }
+
+        private bool Validate() =>_method != null && _url != null;
 
         private async Task<HttpResponseMessage> ResponseMessage()
         {
