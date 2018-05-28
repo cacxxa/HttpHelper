@@ -10,8 +10,8 @@ namespace HttpHelper
     {
         private HttpMethod _method;
         private Uri _url;
-        private IEnumerable<KeyValuePair<string, string>> _headers;
-        private IEnumerable<KeyValuePair<string, string>> _parametrs;
+        private IEnumerable<KeyValuePair<string, string>> _headers = new KeyValuePair<string, string>[]{};
+        private IEnumerable<KeyValuePair<string, string>> _parametrs = new KeyValuePair<string, string>[]{};
         private HttpClientHandler _clientHandler;
         private double _timeout = 3;
 
@@ -53,7 +53,7 @@ namespace HttpHelper
 
         public HttpRequest HeaderAdd(IEnumerable<KeyValuePair<string, string>> headers)
         {
-            _headers = _headers != null ? _headers.Concat(headers) : headers;
+            _headers = _headers.Concat(headers);
             return this;
         }
 
@@ -65,7 +65,7 @@ namespace HttpHelper
 
         public HttpRequest ParametrAdd(IEnumerable<KeyValuePair<string, string>> parametrs)
         {
-            _parametrs = _parametrs != null ? _parametrs.Concat(_parametrs) : parametrs;
+            _parametrs = _parametrs.Concat(_parametrs);
             return this;
         }
 
