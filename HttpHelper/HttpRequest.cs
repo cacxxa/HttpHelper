@@ -10,8 +10,8 @@ namespace HttpHelper
     {
         private HttpMethod _method;
         private Uri _url;
-        private IEnumerable<KeyValuePair<string, string>> _headers;
-        private IEnumerable<KeyValuePair<string, string>> _parametrs;
+        private IEnumerable<KeyValuePair<string, string>> _headers = new KeyValuePair<string, string>[]{};
+        private IEnumerable<KeyValuePair<string, string>> _parametrs = new KeyValuePair<string, string>[]{};
         private HttpClientHandler _clientHandler;
         private double _timeout = 3;
 
@@ -53,7 +53,7 @@ namespace HttpHelper
 
         public HttpRequest HeaderAdd(IEnumerable<KeyValuePair<string, string>> headers)
         {
-            _headers = _headers != null ? _headers.Concat(headers) : headers;
+            _headers = _headers.Concat(headers);
             return this;
         }
 
@@ -65,7 +65,7 @@ namespace HttpHelper
 
         public HttpRequest ParametrAdd(IEnumerable<KeyValuePair<string, string>> parametrs)
         {
-            _parametrs = _parametrs != null ? _parametrs.Concat(_parametrs) : parametrs;
+            _parametrs = _parametrs.Concat(_parametrs);
             return this;
         }
 
@@ -83,11 +83,15 @@ namespace HttpHelper
 
         public async Task<string> SendAsync()
         {
+            if (!Validate()) throw new Exception("Не все обязательные параметры были добавлены (Method, Url)");
+
             using (HttpResponseMessage responseMessage = await ResponseMessage().ConfigureAwait(false))
             {
                 return await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
         }
+
+        private bool Validate() =>_method != null && _url != null;
 
         private async Task<HttpResponseMessage> ResponseMessage()
         {
